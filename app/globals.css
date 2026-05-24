@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-brand-gold: var(--brand-gold);
+  --color-brand-teal: var(--brand-teal);
+  --color-brand-sky: var(--brand-sky);
+  --color-brand-warm: var(--brand-warm);
+  --font-sans: var(--font-geist-sans);
+}
+
+/* Blanco predominante + acentos editables desde Sanity (brandColors) */
+:root {
+  --brand-navy: #1e3a5f;
+  --brand-gold: #c9a227;
+  --brand-teal: #2a7f8f;
+  --brand-sky: #e8f4fc;
+  --brand-warm: #faf6ef;
+
+  --background: #ffffff;
+  --foreground: #1a2e44;
+  --card: #ffffff;
+  --card-foreground: #1a2e44;
+  --primary: var(--brand-navy);
+  --primary-foreground: #ffffff;
+  --muted: #f4f6f8;
+  --muted-foreground: #5c6b7a;
+  --accent: var(--brand-sky);
+  --accent-foreground: var(--brand-navy);
+  --border: #e5e9ef;
+  --ring: var(--brand-teal);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer utilities {
+  .bg-brand-warm {
+    background-color: var(--brand-warm);
+  }
+  .bg-brand-sky {
+    background-color: var(--brand-sky);
+  }
+  .text-brand-gold {
+    color: var(--brand-gold);
+  }
+  .text-brand-teal {
+    color: var(--brand-teal);
+  }
+  .border-brand-gold {
+    border-color: color-mix(in srgb, var(--brand-gold) 40%, transparent);
+  }
+  .accent-bar {
+    background: linear-gradient(
+      90deg,
+      var(--brand-navy),
+      var(--brand-teal),
+      var(--brand-gold)
+    );
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
