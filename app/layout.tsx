@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { AppLoader } from "@/components/loading/AppLoader";
 import { BrandStyles } from "@/components/providers/BrandStyles";
+import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import { SiteHeaderShell } from "@/components/layout/SiteHeaderShell";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { getServerLocale } from "@/lib/i18n/get-locale";
 import { siteContent } from "@/lib/site-content";
 import "./globals.css";
 
@@ -20,19 +22,23 @@ export const metadata: Metadata = {
   description: `${siteContent.tagline} Iglesia en Washington Heights, NYC.`,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getServerLocale();
+
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
       <body className={`${geistSans.variable} min-h-screen font-sans`}>
-        <BrandStyles />
-        <AppLoader />
-        <SiteHeaderShell />
-        <main>{children}</main>
-        <SiteFooter />
+        <LocaleProvider initialLocale={locale}>
+          <BrandStyles />
+          <AppLoader />
+          <SiteHeaderShell />
+          <main>{children}</main>
+          <SiteFooter />
+        </LocaleProvider>
       </body>
     </html>
   );

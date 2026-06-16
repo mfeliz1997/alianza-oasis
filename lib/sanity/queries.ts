@@ -44,6 +44,7 @@ export const UPCOMING_EVENTS_QUERY = groq`
     isFeatured,
     plainDescription,
     location,
+    description,
     image {
       asset->{ _id, metadata { lqip, dimensions } },
       alt

@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { getHomePage, getSiteSettings } from "@/lib/sanity/fetch";
 import { urlFor } from "@/lib/sanity/image";
+import { localMedia } from "@/lib/local-media";
 import { siteContent } from "@/lib/site-content";
 import type { HomePage, SiteSettings } from "@/types/sanity";
 
@@ -16,6 +17,7 @@ export type MergedSite = {
   facebook: string;
   phone: string;
   phoneHref: string;
+  email: string;
   address: string;
   contactIntro: string;
   directionsTrain: string;
@@ -77,6 +79,7 @@ export const getMergedSite = cache(async (): Promise<MergedSite> => {
     home?.heroVideoUrl ??
     settings?.defaultHero?.backgroundVideoUrl ??
     siteContent.heroVideoUrl ??
+    localMedia.heroVideo ??
     null;
 
   return {
@@ -97,6 +100,7 @@ export const getMergedSite = cache(async (): Promise<MergedSite> => {
     phoneHref: settings?.contactPhone
       ? `tel:${settings.contactPhone.replace(/\D/g, "")}`
       : siteContent.contact.phoneHref,
+    email: settings?.contactEmail ?? siteContent.contact.email,
     address: settings?.address ?? siteContent.address.full,
     contactIntro:
       settings?.contactIntro ?? siteContent.contact.contactIntro,

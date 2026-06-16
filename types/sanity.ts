@@ -44,6 +44,7 @@ export type SanityEvent = {
   isFeatured: boolean;
   plainDescription?: string;
   location?: string;
+  description?: import("@portabletext/types").PortableTextBlock[];
   image?: SanityImage;
 };
 

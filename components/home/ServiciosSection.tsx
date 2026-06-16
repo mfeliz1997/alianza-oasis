@@ -1,20 +1,24 @@
 import Image from "next/image";
 import { getServicios } from "@/lib/sanity/fetch";
+import { getServerLocale } from "@/lib/i18n/get-locale";
+import { getMessages } from "@/lib/i18n/messages";
 import { urlFor, getBlurDataURL } from "@/lib/sanity/image";
 
 export async function ServiciosSection() {
   const servicios = await getServicios();
+  const locale = await getServerLocale();
+  const t = getMessages(locale);
 
   if (!servicios.length) return null;
 
   return (
-    <section className="border-t border-border bg-white py-20 md:py-24">
+    <section className="border-t border-border bg-brand-warm/40 py-20 md:py-24">
       <div className="mx-auto max-w-5xl px-6 md:px-8">
         <p className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">
-          Servicios
+          {t.services.eyebrow}
         </p>
         <h2 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">
-          Nuestras reuniones
+          {t.services.title}
         </h2>
         <ul className="mt-10 grid gap-6 sm:grid-cols-2">
           {servicios.map((s) => {
@@ -28,7 +32,7 @@ export async function ServiciosSection() {
             return (
               <li
                 key={s._id}
-                className="overflow-hidden rounded-2xl border border-border bg-white"
+                className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition-shadow hover:shadow-md"
               >
                 {src && (
                   <div className="relative aspect-[3/2] bg-muted">

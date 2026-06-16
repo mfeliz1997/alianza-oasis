@@ -1,4 +1,5 @@
 import { getMergedSite } from "@/lib/cms/merge-site";
+import { localMedia } from "@/lib/local-media";
 import { getNextLiveStream, getSiteSettings } from "@/lib/sanity/fetch";
 import { resolveLiveStreamHeroState } from "@/lib/youtube";
 import { LiveStreamHero } from "./LiveStreamHero";
@@ -11,16 +12,19 @@ export async function LiveStreamHeroSection() {
   ]);
 
   const heroState = await resolveLiveStreamHeroState(scheduled, settings);
+  /** Video local siempre para el hero “Come as you are”. */
+  const heroVideoUrl = localMedia.heroVideo;
 
   return (
     <LiveStreamHero
       initialState={heroState}
-      heroVideoUrl={site.heroVideoUrl}
-      homeContent={site.home}
+      heroVideoUrl={heroVideoUrl}
       logoUrl={site.logoUrl}
       logoAlt={site.logoAlt}
-      nameEn={site.nameEn}
-      tagline={site.tagline}
+      cta={{
+        ctaPrimaryHref: site.home.ctaPrimaryHref,
+        ctaSecondaryHref: site.home.ctaSecondaryHref,
+      }}
     />
   );
 }

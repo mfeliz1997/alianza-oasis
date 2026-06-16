@@ -1,24 +1,28 @@
 import Link from "next/link";
 import { getMergedSite } from "@/lib/cms/merge-site";
+import { getServerLocale } from "@/lib/i18n/get-locale";
+import { getMessages } from "@/lib/i18n/messages";
 import { MapPin, Phone } from "lucide-react";
 
 export async function VisitSection() {
   const site = await getMergedSite();
+  const locale = await getServerLocale();
+  const t = getMessages(locale);
 
   return (
     <section className="border-t border-border bg-brand-sky">
       <div className="mx-auto grid max-w-5xl gap-12 px-6 py-20 md:grid-cols-2 md:px-8 md:py-24">
         <div>
           <p className="text-xs font-medium uppercase tracking-[0.25em] text-brand-teal">
-            Visítanos
+            {t.visit.eyebrow}
           </p>
           <h2 className="mt-3 text-2xl font-semibold tracking-tight">
-            Washington Heights, NYC
+            {t.visit.title}
           </h2>
           <ul className="mt-8 space-y-5 text-sm">
             <li className="flex gap-3 text-muted-foreground">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-gold" />
-              {site.address}
+              {t.schedule.shortAddress}
             </li>
             <li className="flex gap-3">
               <Phone className="mt-0.5 h-4 w-4 shrink-0 text-brand-gold" />
@@ -28,11 +32,11 @@ export async function VisitSection() {
             </li>
           </ul>
           <p className="mt-6 text-sm text-muted-foreground">
-            {site.directionsParking}
+            {t.visit.directionsParking}
           </p>
           <div className="mt-8 flex flex-wrap gap-4 text-sm font-medium">
             <Link href="/contact-us" className="text-brand-teal hover:underline">
-              Contacto →
+              {t.visit.contact} →
             </Link>
             <a
               href={site.instagram}

@@ -1,9 +1,13 @@
 import Link from "next/link";
-import Image from "next/image";
+import { ChurchLogo } from "@/components/brand/ChurchLogo";
 import { getMergedSite } from "@/lib/cms/merge-site";
+import { getServerLocale } from "@/lib/i18n/get-locale";
+import { getMessages } from "@/lib/i18n/messages";
 
 export async function SiteFooter() {
   const site = await getMergedSite();
+  const locale = await getServerLocale();
+  const t = getMessages(locale);
   const year = new Date().getFullYear();
 
   return (
@@ -12,17 +16,9 @@ export async function SiteFooter() {
       <div className="mx-auto max-w-5xl px-6 py-14 md:px-8">
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div>
-            <div className="relative h-10 w-24">
-              <Image
-                src={site.logoUrl}
-                alt={site.logoAlt}
-                fill
-                className="object-contain object-left"
-                unoptimized={site.logoUrl.includes("wixstatic")}
-              />
-            </div>
+            <ChurchLogo alt={site.logoAlt} src={site.logoUrl} size="footer" />
             <p className="mt-4 max-w-xs text-sm text-muted-foreground">
-              {site.address}
+              {t.schedule.shortAddress}
             </p>
             <a
               href={site.phoneHref}
@@ -36,17 +32,17 @@ export async function SiteFooter() {
             <ul className="space-y-2 text-muted-foreground">
               <li>
                 <Link href="/about-us" className="hover:text-foreground">
-                  Nosotros
+                  {t.nav.about}
                 </Link>
               </li>
               <li>
                 <Link href="/events" className="hover:text-foreground">
-                  Eventos
+                  {t.nav.events}
                 </Link>
               </li>
               <li>
                 <Link href="/giving" className="hover:text-foreground">
-                  Dar
+                  {t.nav.giving}
                 </Link>
               </li>
             </ul>
@@ -86,7 +82,7 @@ export async function SiteFooter() {
         </div>
 
         <p className="mt-12 border-t border-border pt-6 text-xs text-muted-foreground">
-          © {year} {site.name}
+          © {year} {locale === "en" ? site.nameEn : site.name}
         </p>
       </div>
     </footer>
