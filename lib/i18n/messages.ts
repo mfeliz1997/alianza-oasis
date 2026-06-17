@@ -71,7 +71,7 @@ const messages = {
     },
     loader: {
       ariaLabel: "Cargando sitio",
-      loading: "Cargando",
+      loading: "Dios te bendiga",
     },
     community: {
       eyebrow: "Comunidad",

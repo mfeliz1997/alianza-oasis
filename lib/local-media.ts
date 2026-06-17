@@ -10,10 +10,7 @@ export const localMedia = {
     "/images/community/worship-2.jpg",
     "/images/community/worship-3.jpg",
   ],
-  logo: {
-    avif: "/images/logo.avif",
-    png: "/images/logo.png",
-  },
+  logo: "/images/logo-oasis.png",
   leaders: {
     danielVilla: "/images/leaders/pastorvilla.avif",
     edwardDeLosSantos: "/images/leaders/eduardelossantos.avif",

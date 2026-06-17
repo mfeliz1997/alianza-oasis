@@ -72,7 +72,7 @@ export function SiteHeader({
     <header className="sticky top-0 z-50 border-b border-border bg-white/95 backdrop-blur-md">
       <div className="accent-bar h-0.5 w-full" />
       <div className="mx-auto flex h-[4.25rem] max-w-5xl items-center justify-between gap-4 px-6 md:px-8">
-        <Link href="/" className="transition-opacity hover:opacity-90">
+        <Link href="/" className="shrink-0">
           <ChurchLogo
             alt={logoAlt}
             src={logoUrl}

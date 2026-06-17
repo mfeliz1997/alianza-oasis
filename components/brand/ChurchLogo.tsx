@@ -3,10 +3,9 @@ import { cn } from "@/lib/utils";
 import { localMedia } from "@/lib/local-media";
 
 const SIZES = {
-  header: "relative block h-11 w-[8.75rem] shrink-0 sm:h-12 sm:w-40",
-  footer: "relative h-11 w-36",
-  loader: "relative h-[4.5rem] w-56 sm:h-20 sm:w-64",
-  panel: "relative h-12 w-44",
+  header: "relative block h-10 w-[11.5rem] shrink-0 sm:h-11 sm:w-[13rem]",
+  footer: "relative h-10 w-44 sm:h-11 sm:w-48",
+  panel: "relative h-11 w-48 sm:w-52",
 } as const;
 
 export type ChurchLogoSize = keyof typeof SIZES;
@@ -27,7 +26,7 @@ export function ChurchLogo({
   priority = false,
   src,
 }: ChurchLogoProps) {
-  const logoSrc = src?.trim() || localMedia.logo.avif;
+  const logoSrc = src?.trim() || localMedia.logo;
   const useLocal = !src || logoSrc.startsWith("/");
 
   return (
@@ -36,13 +35,13 @@ export function ChurchLogo({
         src={logoSrc}
         alt={alt}
         fill
-        className="object-contain object-left drop-shadow-sm"
+        className="object-contain object-left"
         sizes={
-          size === "loader"
-            ? "256px"
-            : size === "header"
-              ? "160px"
-              : "144px"
+          size === "header"
+            ? "208px"
+            : size === "panel"
+              ? "208px"
+              : "192px"
         }
         priority={priority}
         unoptimized={!useLocal}

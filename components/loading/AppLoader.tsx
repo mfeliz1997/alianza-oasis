@@ -2,12 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChurchLogo } from "@/components/brand/ChurchLogo";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { localMedia } from "@/lib/local-media";
-import { siteContent } from "@/lib/site-content";
 
-const MIN_VISIBLE_MS = 900;
+const MIN_VISIBLE_MS = 1100;
+const LETTERS = "OASIS".split("");
+const GRAY = "#9ca3af";
+const NAVY = "#1e3a5f";
+const TEAL = "#2a7f8f";
 
 export function AppLoader() {
   const { messages } = useLocale();
@@ -45,7 +47,7 @@ export function AppLoader() {
       const elapsed = performance.now() - start;
       const wait = Math.max(0, MIN_VISIBLE_MS - elapsed);
       setPhase("done");
-      window.setTimeout(() => setVisible(false), wait + 400);
+      window.setTimeout(() => setVisible(false), wait + 500);
     };
 
     const onWindowLoad = () => finish();
@@ -78,46 +80,91 @@ export function AppLoader() {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed inset-0 z-[200] flex items-center justify-center bg-brand-warm"
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-white"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           role="status"
           aria-live="polite"
           aria-label={t.ariaLabel}
         >
-          <div className="accent-bar absolute inset-x-0 top-0 h-1 opacity-90" />
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-b from-brand-sky/30 via-white to-white"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+          />
 
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-            className="flex flex-col items-center gap-10 px-8"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            transition={{ duration: 0.45, ease: "easeOut" }}
+            className="relative flex flex-col items-center gap-8 px-8"
           >
-            <ChurchLogo
-              alt={siteContent.logo.alt}
-              size="loader"
-              priority
-            />
-
-            <div className="flex w-48 flex-col items-center gap-3">
-              <div className="relative h-px w-full overflow-hidden rounded-full bg-border">
+            <div className="flex items-baseline justify-center" aria-hidden>
+              {LETTERS.map((letter, i) => (
                 <motion.span
-                  className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-brand-teal via-brand-gold to-brand-teal"
-                  animate={{ x: ["-100%", "320%"] }}
+                  key={`${letter}-${i}`}
+                  className="inline-block font-bold leading-none tracking-[0.18em] sm:tracking-[0.22em]"
+                  style={{ fontSize: "clamp(2.75rem, 12vw, 5rem)" }}
+                  initial={{ color: GRAY, opacity: 0.4, y: 6 }}
+                  animate={{
+                    color: [GRAY, GRAY, NAVY, phase === "done" ? TEAL : NAVY],
+                    opacity: [0.4, 0.7, 1, 1],
+                    y: [6, 2, 0, 0],
+                  }}
                   transition={{
-                    duration: 1.1,
-                    repeat: Infinity,
-                    ease: "easeInOut",
+                    duration: 1.4,
+                    delay: 0.15 + i * 0.1,
+                    ease: [0.22, 1, 0.36, 1],
+                    times: [0, 0.35, 0.7, 1],
+                  }}
+                >
+                  {letter}
+                </motion.span>
+              ))}
+            </div>
+
+            <motion.div
+              className="flex flex-col items-center gap-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.85, duration: 0.5 }}
+            >
+              <motion.div
+                className="h-0.5 overflow-hidden rounded-full bg-border"
+                style={{ width: "clamp(8rem, 40vw, 12rem)" }}
+              >
+                <motion.div
+                  className="h-full rounded-full bg-gradient-to-r from-[var(--brand-navy)] via-brand-teal to-brand-gold"
+                  initial={{ width: "0%" }}
+                  animate={{ width: phase === "done" ? "100%" : "65%" }}
+                  transition={{
+                    width: {
+                      duration: phase === "done" ? 0.35 : 1.8,
+                      ease: phase === "done" ? "easeOut" : "easeInOut",
+                    },
                   }}
                 />
-              </div>
-              <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
-                {phase === "done" ? "…" : t.loading}
-              </p>
-            </div>
+              </motion.div>
+
+              <motion.p
+                className="text-[10px] font-medium uppercase tracking-[0.32em] text-muted-foreground sm:text-[11px]"
+                animate={{ opacity: phase === "done" ? 0.5 : 0.85 }}
+              >
+                {t.loading}
+              </motion.p>
+            </motion.div>
           </motion.div>
+
+          <motion.div
+            className="accent-bar absolute inset-x-0 bottom-0 h-1"
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: phase === "done" ? 1 : 0.3 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            style={{ transformOrigin: "left" }}
+          />
         </motion.div>
       )}
     </AnimatePresence>

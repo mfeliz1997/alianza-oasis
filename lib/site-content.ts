@@ -56,7 +56,7 @@ export const siteContent = {
     countdownTitle: "Próximo servicio en vivo",
   },
   logo: {
-    src: "/images/logo.avif",
+    src: "/images/logo-oasis.png",
     alt: "Logo Iglesia Alianza Oasis",
   },
   /** Fallback si no hay video en Sanity (home). Sustituir por tu MP4 en producción. */
