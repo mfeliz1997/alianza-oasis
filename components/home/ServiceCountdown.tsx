@@ -35,14 +35,14 @@ function CountdownUnit({
   ready: boolean;
 }) {
   return (
-    <div className="flex min-w-[4.5rem] flex-col items-center rounded-2xl border border-border/80 bg-white px-4 py-4 shadow-sm sm:min-w-[5rem]">
+    <div className="flex flex-1 flex-col items-center px-0.5 py-1 sm:min-w-[4.5rem] sm:flex-none sm:rounded-2xl sm:border sm:border-border/80 sm:bg-white sm:px-4 sm:py-4 sm:shadow-sm">
       <span
-        className="font-mono text-3xl font-light tabular-nums tracking-tight text-foreground sm:text-4xl"
+        className="font-mono text-xl font-light tabular-nums tracking-tight text-foreground sm:text-3xl md:text-4xl"
         suppressHydrationWarning
       >
         {ready ? String(value).padStart(2, "0") : "--"}
       </span>
-      <span className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+      <span className="mt-0.5 text-[8px] font-medium uppercase tracking-[0.12em] text-muted-foreground sm:mt-1.5 sm:text-[10px] sm:tracking-[0.18em]">
         {label}
       </span>
     </div>
@@ -94,7 +94,7 @@ export function ServiceCountdown({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="mb-14 rounded-3xl border border-brand-gold/30 bg-brand-warm/80 px-6 py-10 text-center shadow-sm md:mb-16 md:px-10 md:py-12"
+      className="mb-14 px-3 py-8 text-center sm:mb-16 sm:rounded-3xl sm:border sm:border-brand-gold/30 sm:bg-brand-warm/80 sm:px-6 sm:py-10 sm:shadow-sm md:px-10 md:py-12"
     >
       <p className="text-xs font-medium uppercase tracking-[0.22em] text-brand-teal">
         {t.eyebrow}
@@ -102,7 +102,7 @@ export function ServiceCountdown({
       <h2 className="mt-3 text-xl font-semibold tracking-tight md:text-2xl">
         {serviceLabel}
       </h2>
-      <div className="mt-8 flex flex-wrap justify-center gap-3 sm:gap-4">
+      <div className="mt-6 grid w-full max-w-sm grid-cols-4 gap-1 sm:mt-8 sm:flex sm:max-w-none sm:flex-wrap sm:justify-center sm:gap-3 md:gap-4">
         {units.map((u) => (
           <CountdownUnit
             key={u.label}

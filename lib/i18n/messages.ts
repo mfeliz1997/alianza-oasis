@@ -24,7 +24,7 @@ const messages = {
       scrollHint: "Desplazar",
     },
     live: {
-      eyebrow: "Próxima transmisión",
+      eyebrow: "Próximo servicio",
       liveBadge: "En vivo",
       days: "Días",
       hours: "Horas",
@@ -119,7 +119,7 @@ const messages = {
       scrollHint: "Scroll",
     },
     live: {
-      eyebrow: "Next broadcast",
+      eyebrow: "Next service",
       liveBadge: "Live now",
       days: "Days",
       hours: "Hours",
@@ -166,7 +166,7 @@ const messages = {
     },
     loader: {
       ariaLabel: "Loading site",
-      loading: "Loading",
+      loading: "God bless you",
     },
     community: {
       eyebrow: "Community",
