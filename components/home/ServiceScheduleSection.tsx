@@ -24,9 +24,7 @@ export async function ServiceScheduleSection() {
         ? "spanishService"
         : slot.id === "sunday-second"
           ? "englishService"
-          : slot.id === "friday"
-            ? "fridayService"
-            : "saturdayService";
+          : "fridayService";
 
     const langKey =
       slot.id === "sunday-second" ? "languageEnglish" : "languageSpanish";

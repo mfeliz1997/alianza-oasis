@@ -4,7 +4,6 @@ const TIME_KEYS = {
   "sunday-first": "timeSundayFirst",
   "sunday-second": "timeSundaySecond",
   friday: "timeFriday",
-  saturday: "timeSaturday",
 } as const;
 
 const NOTE_KEYS = {
@@ -31,9 +30,7 @@ export function getLocalizedServiceLabel(
       ? "spanishService"
       : slotId === "sunday-second"
         ? "englishService"
-        : slotId === "friday"
-          ? "fridayService"
-          : "saturdayService";
+        : "fridayService";
 
   const title = t.schedule[titleKey as keyof typeof t.schedule] as string;
   const time = getLocalizedTimeLabel(slotId, t);

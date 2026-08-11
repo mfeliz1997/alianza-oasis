@@ -100,18 +100,6 @@ export const siteContent = {
       inPerson: true,
       streamed: false,
     },
-    {
-      id: "saturday",
-      day: 6,
-      hour: 18,
-      minute: 0,
-      title: "Servicio de sábado",
-      timeLabel: "Sábado · 6:00 PM",
-      languages: "Español",
-      note: "",
-      inPerson: true,
-      streamed: false,
-    },
   ],
   ministries: [
     {
