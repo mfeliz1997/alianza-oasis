@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { getServerLocale } from "@/lib/i18n/get-locale";
 import { aboutContent } from "@/lib/about-content";
 
-export const metadata: Metadata = {
-  title: "Nosotros",
-};
+export async function generateMetadata() {
+  const locale = await getServerLocale();
+  return { title: locale === "en" ? "About" : "Nosotros" };
+}
 
 export default async function AboutUsPage() {
   const locale = await getServerLocale();
@@ -14,11 +14,11 @@ export default async function AboutUsPage() {
   return (
     <div>
       <header className="border-b border-border bg-brand-warm">
-        <div className="mx-auto max-w-6xl px-6 py-20 md:px-10 md:py-24">
+        <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20 md:px-10 md:py-24">
           <p className="text-xs font-medium uppercase tracking-[0.25em] text-brand-teal">
             {t.eyebrow}
           </p>
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight md:text-5xl">
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
             {t.title}
           </h1>
           <blockquote className="mt-10 max-w-3xl border-l-4 border-brand-gold pl-6">
@@ -34,9 +34,9 @@ export default async function AboutUsPage() {
 
       <div className="accent-bar h-1" />
 
-      <div className="mx-auto max-w-6xl px-6 py-16 md:px-10 md:py-20">
-        <div className="grid gap-8 md:grid-cols-2">
-          <section className="rounded-2xl border border-border bg-white p-8 shadow-sm md:p-10">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 md:px-10 md:py-20">
+        <div className="grid gap-6 sm:gap-8 md:grid-cols-2">
+          <section className="rounded-2xl border border-border bg-white p-6 shadow-sm sm:p-8 md:p-10">
             <p className="text-xs font-medium uppercase tracking-[0.25em] text-brand-teal">
               {t.mission.title}
             </p>
@@ -45,7 +45,7 @@ export default async function AboutUsPage() {
             </p>
           </section>
 
-          <section className="rounded-2xl border border-border bg-brand-sky/40 p-8 md:p-10">
+          <section className="rounded-2xl border border-border bg-brand-sky/40 p-6 sm:p-8 md:p-10">
             <p className="text-xs font-medium uppercase tracking-[0.25em] text-brand-teal">
               {t.vision.title}
             </p>

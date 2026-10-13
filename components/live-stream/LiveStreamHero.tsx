@@ -49,7 +49,7 @@ function CountdownUnit({
       >
         {ready ? String(value).padStart(2, "0") : "--"}
       </span>
-      <span className="mt-0.5 text-[8px] font-medium uppercase tracking-[0.12em] text-muted-foreground sm:mt-1.5 sm:text-[10px] sm:tracking-[0.18em]">
+      <span className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground sm:mt-1.5 sm:text-[10px] sm:tracking-[0.18em]">
         {label}
       </span>
     </div>
@@ -181,9 +181,11 @@ type HeroCta = {
 
 function HomeWelcome({
   heroVideoUrl,
+  heroYoutubeId,
   cta,
 }: {
-  heroVideoUrl: string;
+  heroVideoUrl?: string | null;
+  heroYoutubeId?: string | null;
   cta: HeroCta;
 }) {
   const { messages } = useLocale();
@@ -191,20 +193,20 @@ function HomeWelcome({
 
   return (
     <section className="relative flex min-h-[100svh] w-full items-center justify-center overflow-hidden border-b border-border bg-black">
-      <HeroVideoBackground src={heroVideoUrl} />
+      <HeroVideoBackground src={heroVideoUrl} youtubeId={heroYoutubeId} />
 
-      <div className="relative z-10 mx-auto w-full max-w-4xl px-6 py-24 md:px-10 md:py-28">
+      <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center px-5 pb-24 pt-[max(5rem,12svh)] sm:px-6 md:px-10 md:pb-28 md:pt-28">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, ease: "easeOut" }}
-          className="flex flex-col items-center gap-10 text-center"
+          className="flex w-full flex-col items-center gap-8 text-center sm:gap-10"
         >
-          <div className="space-y-4 md:space-y-5">
-            <h1 className="text-2xl font-semibold leading-snug tracking-tight text-white sm:text-3xl md:text-4xl md:leading-tight lg:text-5xl">
+          <div className="space-y-3 sm:space-y-4 md:space-y-5">
+            <h1 className="text-[1.35rem] font-semibold leading-snug tracking-tight text-white sm:text-3xl md:text-4xl md:leading-tight lg:text-5xl">
               {t.welcomeLine1}
             </h1>
-            <p className="text-lg font-medium text-white/90 sm:text-xl md:text-2xl">
+            <p className="text-base font-medium text-white/90 sm:text-xl md:text-2xl">
               {t.welcomeLine2}
             </p>
           </div>
@@ -213,16 +215,16 @@ function HomeWelcome({
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.45 }}
-            className="flex flex-wrap items-center justify-center gap-3"
+            className="flex w-full max-w-sm flex-col items-stretch gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center"
           >
-            <Button asChild size="lg" className="rounded-full px-8 shadow-md">
+            <Button asChild size="lg" className="h-12 w-full rounded-full px-8 shadow-md sm:h-11 sm:w-auto">
               <a href="#schedule">{t.planVisit}</a>
             </Button>
             <Button
               asChild
               variant="outline"
               size="lg"
-              className="rounded-full border-white/40 bg-white/10 px-8 text-white hover:bg-white/20 hover:text-white"
+              className="h-12 w-full rounded-full border-white/40 bg-white/10 px-8 text-white hover:bg-white/20 hover:text-white sm:h-11 sm:w-auto"
             >
               <a href={cta.ctaSecondaryHref} target="_blank" rel="noreferrer">
                 <Play className="h-4 w-4" />
@@ -238,7 +240,7 @@ function HomeWelcome({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6, duration: 0.5 }}
-        className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-white/70 transition-colors hover:text-white"
+        className="absolute bottom-[max(1.25rem,env(safe-area-inset-bottom))] left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-1.5 text-white/70 transition-colors hover:text-white sm:bottom-8 sm:gap-2"
         aria-label={t.scrollHint}
       >
         <span className="text-[10px] font-medium uppercase tracking-[0.2em]">
@@ -248,7 +250,7 @@ function HomeWelcome({
           animate={{ y: [0, 6, 0] }}
           transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
         >
-          <ChevronDown className="h-6 w-6" aria-hidden />
+          <ChevronDown className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />
         </motion.span>
       </motion.a>
     </section>
@@ -318,6 +320,7 @@ function LiveStreamPanel({
 export type LiveStreamHeroProps = {
   initialState: LiveStreamHeroState;
   heroVideoUrl?: string | null;
+  heroYoutubeId?: string | null;
   logoUrl: string;
   logoAlt: string;
   cta: HeroCta;
@@ -326,23 +329,12 @@ export type LiveStreamHeroProps = {
 export function LiveStreamHero({
   initialState,
   heroVideoUrl,
+  heroYoutubeId,
   logoUrl,
   logoAlt,
   cta,
 }: LiveStreamHeroProps) {
   const [state, setState] = useState<LiveStreamHeroState>(initialState);
-  const videoSrc = heroVideoUrl ?? "/media/hero.mp4";
-
-  useEffect(() => {
-    const link = document.createElement("link");
-    link.rel = "preload";
-    link.as = "video";
-    link.href = videoSrc;
-    document.head.appendChild(link);
-    return () => {
-      document.head.removeChild(link);
-    };
-  }, [videoSrc]);
 
   useEffect(() => {
     setState(initialState);
@@ -363,7 +355,11 @@ export function LiveStreamHero({
 
   return (
     <>
-      <HomeWelcome heroVideoUrl={videoSrc} cta={cta} />
+      <HomeWelcome
+        heroVideoUrl={heroVideoUrl}
+        heroYoutubeId={heroYoutubeId}
+        cta={cta}
+      />
       {state.mode === "live" && (
         <LiveStreamPanel
           state={state}

@@ -82,6 +82,14 @@ const messages = {
       vision: "Visión",
       mission: "Misión",
       followUs: "¡Síguenos!",
+      prevImage: "Imagen anterior",
+      nextImage: "Siguiente imagen",
+      goToImage: "Ir a imagen",
+    },
+    leadersPage: {
+      title: "Nuestro liderazgo",
+      intro:
+        "El equipo pastoral que guía a Iglesia Alianza Oasis en Washington Heights.",
     },
     contactPage: {
       title: "Contacto",
@@ -177,6 +185,14 @@ const messages = {
       vision: "Vision",
       mission: "Mission",
       followUs: "Follow us!",
+      prevImage: "Previous image",
+      nextImage: "Next image",
+      goToImage: "Go to image",
+    },
+    leadersPage: {
+      title: "Our leadership",
+      intro:
+        "The pastoral team that leads Oasis Alliance Church in Washington Heights.",
     },
     contactPage: {
       title: "Contact",

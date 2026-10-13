@@ -57,8 +57,8 @@ export async function ServiceScheduleSection() {
     : null;
 
   return (
-    <section id="schedule" className="scroll-mt-20 bg-white py-20 md:py-24">
-      <div className="mx-auto max-w-5xl px-6 md:px-8">
+    <section id="schedule" className="scroll-mt-16 bg-white py-14 sm:scroll-mt-20 sm:py-20 md:py-24">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 md:px-8">
         {next && nextServiceLabel && (
           <ServiceCountdown
             targetDate={next.targetDate}

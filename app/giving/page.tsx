@@ -1,13 +1,18 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { HandHeart, Heart, Users } from "lucide-react";
 import { getServerLocale } from "@/lib/i18n/get-locale";
 import { givingConfig, givingContent } from "@/lib/giving-content";
 
-export const metadata: Metadata = {
-  title: "Dar",
-  description: "Ofrenda, donaciones en línea y voluntariado — Iglesia Alianza Oasis.",
-};
+export async function generateMetadata() {
+  const locale = await getServerLocale();
+  return {
+    title: locale === "en" ? "Give" : "Dar",
+    description:
+      locale === "en"
+        ? "Offering, online giving, and volunteering — Oasis Alliance Church."
+        : "Ofrenda, donaciones en línea y voluntariado — Iglesia Alianza Oasis.",
+  };
+}
 
 export default async function GivingPage() {
   const locale = await getServerLocale();
@@ -16,7 +21,7 @@ export default async function GivingPage() {
   return (
     <div>
       <header className="border-b border-border bg-brand-warm">
-        <div className="mx-auto max-w-6xl px-6 py-20 md:px-10 md:py-24">
+        <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20 md:px-10 md:py-24">
           <p className="text-xs font-medium uppercase tracking-[0.25em] text-brand-teal">
             {locale === "en" ? "Generosity" : "Generosidad"}
           </p>

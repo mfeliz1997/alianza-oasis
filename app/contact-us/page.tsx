@@ -1,13 +1,15 @@
-import type { Metadata } from "next";
 import { getMergedSite } from "@/lib/cms/merge-site";
 import { submitContactForm } from "@/app/contact-us/actions";
 import { getServerLocale } from "@/lib/i18n/get-locale";
 import { getMessages } from "@/lib/i18n/messages";
 import { siteContent } from "@/lib/site-content";
 
-export const metadata: Metadata = {
-  title: "Contacto",
-};
+export async function generateMetadata() {
+  const locale = await getServerLocale();
+  return {
+    title: locale === "en" ? "Contact" : "Contacto",
+  };
+}
 
 export default async function ContactUsPage() {
   const site = await getMergedSite();
@@ -17,8 +19,8 @@ export default async function ContactUsPage() {
   const { address } = siteContent;
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-20 md:px-10">
-      <h1 className="text-4xl font-semibold tracking-tight">{c.title}</h1>
+    <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20 md:px-10">
+      <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{c.title}</h1>
       <p className="mt-4 max-w-2xl text-muted-foreground">{c.intro}</p>
 
       <div className="mt-12 grid gap-12 lg:grid-cols-2">
@@ -60,7 +62,7 @@ export default async function ContactUsPage() {
           </div>
           <button
             type="submit"
-            className="inline-flex h-11 items-center justify-center rounded-full bg-primary px-8 text-sm font-medium text-primary-foreground"
+            className="inline-flex h-12 w-full items-center justify-center rounded-full bg-primary px-8 text-sm font-medium text-primary-foreground sm:h-11 sm:w-auto"
           >
             {c.submit}
           </button>
@@ -100,8 +102,8 @@ export default async function ContactUsPage() {
           </div>
           <div className="aspect-video overflow-hidden rounded-2xl border border-border">
             <iframe
-              src={site.mapEmbedUrl}
-              title="Ubicación"
+              src={site.mapEmbedUrl.replace(/hl=[a-z]{2}/i, `hl=${locale}`)}
+              title={c.directions}
               className="h-full w-full"
               loading="lazy"
             />

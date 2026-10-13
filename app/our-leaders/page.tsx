@@ -1,18 +1,22 @@
-import type { Metadata } from "next";
 import { getLeaders } from "@/lib/sanity/fetch";
 import { urlFor, getBlurDataURL } from "@/lib/sanity/image";
+import { getServerLocale } from "@/lib/i18n/get-locale";
+import { getMessages } from "@/lib/i18n/messages";
 import { siteContent } from "@/lib/site-content";
 import Image from "next/image";
 
-export const metadata: Metadata = {
-  title: "Liderazgo",
-};
+export async function generateMetadata() {
+  const locale = await getServerLocale();
+  return { title: locale === "en" ? "Leadership" : "Liderazgo" };
+}
 
 const localPhotoByName = Object.fromEntries(
   siteContent.leaders.map((leader) => [leader.name, leader.photo])
 );
 
 export default async function OurLeadersPage() {
+  const locale = await getServerLocale();
+  const t = getMessages(locale).leadersPage;
   const cmsLeaders = await getLeaders();
   const leaders =
     cmsLeaders.length > 0
@@ -32,12 +36,12 @@ export default async function OurLeadersPage() {
         }));
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-20 md:px-10">
-      <h1 className="text-4xl font-semibold tracking-tight">Nuestro liderazgo</h1>
-      <p className="mt-4 max-w-2xl text-muted-foreground">
-        El equipo pastoral que guía a Iglesia Alianza Oasis en Washington Heights.
-      </p>
-      <ul className="mt-12 grid gap-8 md:grid-cols-2">
+    <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20 md:px-10">
+      <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+        {t.title}
+      </h1>
+      <p className="mt-4 max-w-2xl text-muted-foreground">{t.intro}</p>
+      <ul className="mt-10 grid gap-6 sm:mt-12 sm:gap-8 md:grid-cols-2">
         {leaders.map((leader) => {
           const cmsSrc =
             leader.photo?.asset?._id

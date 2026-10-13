@@ -11,7 +11,7 @@ export async function VisitSection() {
 
   return (
     <section className="border-t border-border bg-brand-sky">
-      <div className="mx-auto grid max-w-5xl gap-12 px-6 py-20 md:grid-cols-2 md:px-8 md:py-24">
+      <div className="mx-auto grid max-w-5xl gap-10 px-4 py-14 sm:gap-12 sm:px-6 sm:py-20 md:grid-cols-2 md:px-8 md:py-24">
         <div>
           <p className="text-xs font-medium uppercase tracking-[0.25em] text-brand-teal">
             {t.visit.eyebrow}
@@ -50,8 +50,8 @@ export async function VisitSection() {
         </div>
         <div className="aspect-[4/3] overflow-hidden rounded-2xl border border-border bg-white shadow-sm md:aspect-video">
           <iframe
-            src={site.mapEmbedUrl}
-            title="Mapa Iglesia Alianza Oasis"
+            src={site.mapEmbedUrl.replace(/hl=[a-z]{2}/i, `hl=${locale}`)}
+            title={locale === "en" ? "Oasis Alliance Church map" : "Mapa Iglesia Alianza Oasis"}
             className="h-full w-full"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"

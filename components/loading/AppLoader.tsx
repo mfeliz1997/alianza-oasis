@@ -3,9 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { localMedia } from "@/lib/local-media";
 
-const MIN_VISIBLE_MS = 1100;
+const MIN_VISIBLE_MS = 900;
 const LETTERS = "OASIS".split("");
 const GRAY = "#9ca3af";
 const NAVY = "#1e3a5f";
@@ -33,11 +32,6 @@ export function AppLoader() {
     if (started.current) return;
     started.current = true;
 
-    const video = document.createElement("video");
-    video.preload = "auto";
-    video.muted = true;
-    video.src = localMedia.heroVideo;
-
     const start = performance.now();
     let done = false;
 
@@ -47,7 +41,7 @@ export function AppLoader() {
       const elapsed = performance.now() - start;
       const wait = Math.max(0, MIN_VISIBLE_MS - elapsed);
       setPhase("done");
-      window.setTimeout(() => setVisible(false), wait + 500);
+      window.setTimeout(() => setVisible(false), wait + 350);
     };
 
     const onWindowLoad = () => finish();
@@ -57,22 +51,12 @@ export function AppLoader() {
       window.addEventListener("load", onWindowLoad, { once: true });
     }
 
-    video.addEventListener("canplaythrough", finish, { once: true });
-    video.addEventListener(
-      "loadeddata",
-      () => {
-        if (performance.now() - start > 500) finish();
-      },
-      { once: true }
-    );
-
-    const safety = window.setTimeout(finish, 3500);
+    // Do not wait on hero video — that alone burned ~100 GB Fast Data Transfer
+    const safety = window.setTimeout(finish, 2200);
 
     return () => {
       window.removeEventListener("load", onWindowLoad);
       window.clearTimeout(safety);
-      video.removeAttribute("src");
-      video.load();
     };
   }, []);
 
@@ -83,7 +67,7 @@ export function AppLoader() {
           className="fixed inset-0 z-[200] flex items-center justify-center bg-white"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           role="status"
           aria-live="polite"
           aria-label={t.ariaLabel}
@@ -92,14 +76,14 @@ export function AppLoader() {
             className="absolute inset-0 bg-gradient-to-b from-brand-sky/30 via-white to-white"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
           />
 
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.02 }}
-            transition={{ duration: 0.45, ease: "easeOut" }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
             className="relative flex flex-col items-center gap-8 px-8"
           >
             <div className="flex items-baseline justify-center" aria-hidden>
@@ -107,7 +91,7 @@ export function AppLoader() {
                 <motion.span
                   key={`${letter}-${i}`}
                   className="inline-block font-bold leading-none tracking-[0.18em] sm:tracking-[0.22em]"
-                  style={{ fontSize: "clamp(2.75rem, 12vw, 5rem)" }}
+                  style={{ fontSize: "clamp(2.5rem, 11vw, 5rem)" }}
                   initial={{ color: GRAY, opacity: 0.4, y: 6 }}
                   animate={{
                     color: [GRAY, GRAY, NAVY, phase === "done" ? TEAL : NAVY],
@@ -115,8 +99,8 @@ export function AppLoader() {
                     y: [6, 2, 0, 0],
                   }}
                   transition={{
-                    duration: 1.4,
-                    delay: 0.15 + i * 0.1,
+                    duration: 1.2,
+                    delay: 0.1 + i * 0.08,
                     ease: [0.22, 1, 0.36, 1],
                     times: [0, 0.35, 0.7, 1],
                   }}
@@ -130,7 +114,7 @@ export function AppLoader() {
               className="flex flex-col items-center gap-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.85, duration: 0.5 }}
+              transition={{ delay: 0.6, duration: 0.4 }}
             >
               <motion.div
                 className="h-0.5 overflow-hidden rounded-full bg-border"
@@ -142,7 +126,7 @@ export function AppLoader() {
                   animate={{ width: phase === "done" ? "100%" : "65%" }}
                   transition={{
                     width: {
-                      duration: phase === "done" ? 0.35 : 1.8,
+                      duration: phase === "done" ? 0.3 : 1.5,
                       ease: phase === "done" ? "easeOut" : "easeInOut",
                     },
                   }}
@@ -162,7 +146,7 @@ export function AppLoader() {
             className="accent-bar absolute inset-x-0 bottom-0 h-1"
             initial={{ scaleX: 0 }}
             animate={{ scaleX: phase === "done" ? 1 : 0.3 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             style={{ transformOrigin: "left" }}
           />
         </motion.div>

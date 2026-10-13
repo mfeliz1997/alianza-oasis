@@ -4,6 +4,7 @@ export const HOME_PAGE_QUERY = groq`
   *[_id == "home"][0] {
     title,
     subtitle,
+    heroYoutubeUrl,
     heroVideoUrl,
     "heroVideoFileUrl": heroVideo.asset->url,
     welcomeEyebrow,

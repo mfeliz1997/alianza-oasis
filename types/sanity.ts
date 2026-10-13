@@ -14,6 +14,7 @@ export type SanityImage = {
 export type HomePage = {
   title?: string;
   subtitle?: string;
+  heroYoutubeUrl?: string;
   heroVideoUrl?: string;
   heroVideoFileUrl?: string;
   heroImage?: SanityImage;

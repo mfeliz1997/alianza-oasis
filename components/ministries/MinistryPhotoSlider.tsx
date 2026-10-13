@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 type MinistryPhotoSliderProps = {
   images: readonly string[];
@@ -11,6 +12,8 @@ type MinistryPhotoSliderProps = {
 };
 
 export function MinistryPhotoSlider({ images, alt }: MinistryPhotoSliderProps) {
+  const { messages } = useLocale();
+  const t = messages.ministriesPage;
   const [index, setIndex] = useState(0);
   const total = images.length;
 
@@ -59,16 +62,16 @@ export function MinistryPhotoSlider({ images, alt }: MinistryPhotoSliderProps) {
           <button
             type="button"
             onClick={() => goTo(index - 1)}
-            aria-label="Imagen anterior"
-            className="absolute left-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-foreground opacity-0 shadow transition hover:bg-white group-hover:opacity-100 md:opacity-100"
+            aria-label={t.prevImage}
+            className="absolute left-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-foreground opacity-100 shadow transition hover:bg-white sm:left-3 sm:h-9 sm:w-9 md:opacity-0 md:group-hover:opacity-100"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
           <button
             type="button"
             onClick={() => goTo(index + 1)}
-            aria-label="Siguiente imagen"
-            className="absolute right-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-foreground opacity-0 shadow transition hover:bg-white group-hover:opacity-100 md:opacity-100"
+            aria-label={t.nextImage}
+            className="absolute right-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-foreground opacity-100 shadow transition hover:bg-white sm:right-3 sm:h-9 sm:w-9 md:opacity-0 md:group-hover:opacity-100"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
@@ -78,12 +81,12 @@ export function MinistryPhotoSlider({ images, alt }: MinistryPhotoSliderProps) {
               <button
                 key={src}
                 type="button"
-                aria-label={`Ir a imagen ${i + 1}`}
+                aria-label={`${t.goToImage} ${i + 1}`}
                 onClick={() => setIndex(i)}
-                className={`h-1.5 rounded-full transition-all ${
+                className={`h-2 rounded-full transition-all sm:h-1.5 ${
                   i === index
                     ? "w-6 bg-white"
-                    : "w-1.5 bg-white/50 hover:bg-white/80"
+                    : "w-2 bg-white/50 hover:bg-white/80 sm:w-1.5"
                 }`}
               />
             ))}
