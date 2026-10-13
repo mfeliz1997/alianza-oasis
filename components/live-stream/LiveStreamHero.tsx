@@ -181,11 +181,9 @@ type HeroCta = {
 
 function HomeWelcome({
   heroVideoUrl,
-  heroYoutubeId,
   cta,
 }: {
   heroVideoUrl?: string | null;
-  heroYoutubeId?: string | null;
   cta: HeroCta;
 }) {
   const { messages } = useLocale();
@@ -193,7 +191,7 @@ function HomeWelcome({
 
   return (
     <section className="relative flex min-h-[100svh] w-full items-center justify-center overflow-hidden border-b border-border bg-black">
-      <HeroVideoBackground src={heroVideoUrl} youtubeId={heroYoutubeId} />
+      <HeroVideoBackground src={heroVideoUrl} />
 
       <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center px-5 pb-24 pt-[max(5rem,12svh)] sm:px-6 md:px-10 md:pb-28 md:pt-28">
         <motion.div
@@ -320,7 +318,6 @@ function LiveStreamPanel({
 export type LiveStreamHeroProps = {
   initialState: LiveStreamHeroState;
   heroVideoUrl?: string | null;
-  heroYoutubeId?: string | null;
   logoUrl: string;
   logoAlt: string;
   cta: HeroCta;
@@ -329,7 +326,6 @@ export type LiveStreamHeroProps = {
 export function LiveStreamHero({
   initialState,
   heroVideoUrl,
-  heroYoutubeId,
   logoUrl,
   logoAlt,
   cta,
@@ -355,11 +351,7 @@ export function LiveStreamHero({
 
   return (
     <>
-      <HomeWelcome
-        heroVideoUrl={heroVideoUrl}
-        heroYoutubeId={heroYoutubeId}
-        cta={cta}
-      />
+      <HomeWelcome heroVideoUrl={heroVideoUrl} cta={cta} />
       {state.mode === "live" && (
         <LiveStreamPanel
           state={state}

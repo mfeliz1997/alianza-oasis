@@ -59,13 +59,7 @@ export const siteContent = {
     src: "/images/logo-oasis.png",
     alt: "Logo Iglesia Alianza Oasis",
   },
-  /**
-   * Prefer YouTube for the hero (0 Fast Data Transfer on Vercel).
-   * Set NEXT_PUBLIC_HERO_YOUTUBE_ID or paste a full URL / 11-char id.
-   * Example: "dQw4w9WgXcQ" or "https://www.youtube.com/watch?v=..."
-   */
-  heroYoutubeId: process.env.NEXT_PUBLIC_HERO_YOUTUBE_ID ?? "",
-  /** Local MP4 fallback only when no YouTube id is configured (~1.4 MB compressed). */
+  /** Compressed local hero loop (~1.4 MB). Desktop only; mobile uses poster. */
   heroVideoUrl: "/media/hero.mp4",
   mapEmbedUrl:
     "https://maps.google.com/maps?q=141+Audubon+Ave,+New+York,+NY+10032&hl=es&z=15&output=embed",

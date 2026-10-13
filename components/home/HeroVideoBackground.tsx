@@ -4,20 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { localMedia } from "@/lib/local-media";
-import {
-  extractYouTubeVideoId,
-  youtubeBackgroundEmbedUrl,
-} from "@/lib/youtube";
 
 type HeroVideoBackgroundProps = {
-  /** Local MP4 path — only used if no YouTube id. Prefer YouTube to avoid Vercel bandwidth. */
+  /** Local compressed MP4 (~1.4 MB). YouTube embeds look poor as backgrounds. */
   src?: string | null;
-  /** YouTube video id or full URL — preferred hero background. */
-  youtubeId?: string | null;
   poster?: string;
 };
 
-function shouldPlayMotion(): boolean {
+function shouldPlayVideo(): boolean {
   if (typeof window === "undefined") return false;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     return false;
@@ -31,37 +25,37 @@ function shouldPlayMotion(): boolean {
   if (connection?.effectiveType === "2g" || connection?.effectiveType === "slow-2g") {
     return false;
   }
-  // Mobile: poster only — lighter and no autoplay friction
-  if (window.matchMedia("(max-width: 767px)").matches) return false;
+  // Mobile + tablet portrait: poster only — biggest bandwidth win
+  if (window.matchMedia("(max-width: 1023px)").matches) return false;
   return true;
 }
 
-/** Video de fondo del hero — YouTube preferido (0 bytes en Vercel). */
+/** Hero background: poster everywhere; compressed MP4 only on desktop. */
 export function HeroVideoBackground({
   src,
-  youtubeId,
   poster = localMedia.heroPoster,
 }: HeroVideoBackgroundProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const ytId = extractYouTubeVideoId(youtubeId);
+  const containerRef = useRef<HTMLDivElement>(null);
   const localSrc =
-    src && !src.startsWith("http") ? src : ytId ? null : localMedia.heroVideo;
+    src && !src.startsWith("http") ? src : localMedia.heroVideo;
 
   const [ready, setReady] = useState(false);
-  const [playMotion, setPlayMotion] = useState(false);
+  const [playVideo, setPlayVideo] = useState(false);
 
   useEffect(() => {
-    setPlayMotion(shouldPlayMotion());
+    setPlayVideo(shouldPlayVideo());
   }, []);
 
   useEffect(() => {
-    if (!playMotion || ytId || !localSrc) return;
+    if (!playVideo || !localSrc) return;
     const video = videoRef.current;
-    if (!video) return;
+    const root = containerRef.current;
+    if (!video || !root) return;
 
     const tryPlay = () => {
       void video.play().catch(() => {
-        /* autoplay blocked until interaction */
+        /* autoplay blocked */
       });
     };
 
@@ -72,30 +66,42 @@ export function HeroVideoBackground({
 
     video.addEventListener("loadeddata", onReady);
     video.addEventListener("canplay", onReady);
+
+    // Only fetch when hero is on screen
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (video.networkState === HTMLMediaElement.NETWORK_EMPTY) {
+            video.load();
+          }
+          tryPlay();
+        } else {
+          video.pause();
+        }
+      },
+      { rootMargin: "80px", threshold: 0.05 }
+    );
+    io.observe(root);
+
     if (video.readyState >= 2) onReady();
-    video.load();
-    tryPlay();
 
     return () => {
+      io.disconnect();
       video.removeEventListener("loadeddata", onReady);
       video.removeEventListener("canplay", onReady);
     };
-  }, [localSrc, playMotion, ytId]);
-
-  useEffect(() => {
-    if (playMotion && ytId) {
-      // YouTube iframe has no reliable ready event without API; fade in shortly
-      const t = window.setTimeout(() => setReady(true), 600);
-      return () => window.clearTimeout(t);
-    }
-  }, [playMotion, ytId]);
+  }, [localSrc, playVideo]);
 
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+    <div
+      ref={containerRef}
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+      aria-hidden
+    >
       <motion.div
         className="absolute inset-0"
         initial={{ opacity: 0, scale: 1.06 }}
-        animate={{ opacity: ready || !playMotion ? 1 : 0.85, scale: 1.02 }}
+        animate={{ opacity: ready || !playVideo ? 1 : 0.85, scale: 1.02 }}
         transition={{ duration: 1.2, ease: "easeOut" }}
       >
         <div className="absolute inset-0">
@@ -109,19 +115,7 @@ export function HeroVideoBackground({
           />
         </div>
 
-        {playMotion && ytId && (
-          <div className="absolute inset-0 overflow-hidden">
-            <iframe
-              src={youtubeBackgroundEmbedUrl(ytId)}
-              title=""
-              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-              className="absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0"
-              loading="lazy"
-            />
-          </div>
-        )}
-
-        {playMotion && !ytId && localSrc && (
+        {playVideo && localSrc && (
           <video
             ref={videoRef}
             autoPlay

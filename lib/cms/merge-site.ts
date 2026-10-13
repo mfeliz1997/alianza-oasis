@@ -3,7 +3,6 @@ import { getHomePage, getSiteSettings } from "@/lib/sanity/fetch";
 import { urlFor } from "@/lib/sanity/image";
 import { localMedia } from "@/lib/local-media";
 import { siteContent } from "@/lib/site-content";
-import { extractYouTubeVideoId } from "@/lib/youtube";
 import type { HomePage, SiteSettings } from "@/types/sanity";
 
 export type MergedSite = {
@@ -25,7 +24,6 @@ export type MergedSite = {
   directionsParking: string;
   mapEmbedUrl: string;
   heroVideoUrl: string | null;
-  heroYoutubeId: string | null;
   brand: {
     navy: string;
     gold: string;
@@ -76,20 +74,9 @@ export const getMergedSite = cache(async (): Promise<MergedSite> => {
     warm: settings?.brandColors?.warm ?? "#faf6ef",
   };
 
-  const heroYoutubeId =
-    extractYouTubeVideoId(home?.heroYoutubeUrl) ??
-    extractYouTubeVideoId(siteContent.heroYoutubeId) ??
-    null;
-
-  // Prefer YouTube — skip heavy local/CDN MP4 when a YouTube id exists
-  const heroVideoUrl = heroYoutubeId
-    ? null
-    : (home?.heroVideoFileUrl ??
-        home?.heroVideoUrl ??
-        settings?.defaultHero?.backgroundVideoUrl ??
-        siteContent.heroVideoUrl ??
-        localMedia.heroVideo ??
-        null);
+  // Compressed local MP4 only — YouTube embeds letterbox poorly as hero backgrounds
+  const heroVideoUrl =
+    siteContent.heroVideoUrl ?? localMedia.heroVideo ?? null;
 
   return {
     name: settings?.siteTitle ?? siteContent.name,
@@ -119,7 +106,6 @@ export const getMergedSite = cache(async (): Promise<MergedSite> => {
       settings?.directionsParking ?? siteContent.directions.drivers,
     mapEmbedUrl: settings?.mapEmbedUrl ?? siteContent.mapEmbedUrl,
     heroVideoUrl,
-    heroYoutubeId,
     brand,
     home: {
       title: home?.title ?? siteContent.hero.headline,

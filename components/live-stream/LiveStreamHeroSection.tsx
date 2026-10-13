@@ -1,4 +1,5 @@
 import { getMergedSite } from "@/lib/cms/merge-site";
+import { localMedia } from "@/lib/local-media";
 import { getNextLiveStream, getSiteSettings } from "@/lib/sanity/fetch";
 import { resolveLiveStreamHeroState } from "@/lib/youtube";
 import { LiveStreamHero } from "./LiveStreamHero";
@@ -12,11 +13,13 @@ export async function LiveStreamHeroSection() {
 
   const heroState = await resolveLiveStreamHeroState(scheduled, settings);
 
+  // Always use compressed local MP4 (YouTube backgrounds look poor / letterboxed)
+  const heroVideoUrl = localMedia.heroVideo;
+
   return (
     <LiveStreamHero
       initialState={heroState}
-      heroYoutubeId={site.heroYoutubeId}
-      heroVideoUrl={site.heroVideoUrl}
+      heroVideoUrl={heroVideoUrl}
       logoUrl={site.logoUrl}
       logoAlt={site.logoAlt}
       cta={{
