@@ -12,7 +12,8 @@ export async function LiveStreamHeroSection() {
   ]);
 
   const heroState = await resolveLiveStreamHeroState(scheduled, settings);
-  /** Video local siempre para el hero “Come as you are”. */
+
+  // Always use compressed local MP4 (YouTube backgrounds look poor / letterboxed)
   const heroVideoUrl = localMedia.heroVideo;
 
   return (

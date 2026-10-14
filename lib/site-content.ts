@@ -59,7 +59,7 @@ export const siteContent = {
     src: "/images/logo-oasis.png",
     alt: "Logo Iglesia Alianza Oasis",
   },
-  /** Fallback si no hay video en Sanity (home). Sustituir por tu MP4 en producción. */
+  /** Compressed local hero loop (~1.4 MB). Desktop only; mobile uses poster. */
   heroVideoUrl: "/media/hero.mp4",
   mapEmbedUrl:
     "https://maps.google.com/maps?q=141+Audubon+Ave,+New+York,+NY+10032&hl=es&z=15&output=embed",

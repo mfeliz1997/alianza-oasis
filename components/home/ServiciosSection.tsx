@@ -12,8 +12,8 @@ export async function ServiciosSection() {
   if (!servicios.length) return null;
 
   return (
-    <section className="border-t border-border bg-brand-warm/40 py-20 md:py-24">
-      <div className="mx-auto max-w-5xl px-6 md:px-8">
+    <section className="border-t border-border bg-brand-warm/40 py-14 sm:py-20 md:py-24">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 md:px-8">
         <p className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">
           {t.services.eyebrow}
         </p>

@@ -74,13 +74,9 @@ export const getMergedSite = cache(async (): Promise<MergedSite> => {
     warm: settings?.brandColors?.warm ?? "#faf6ef",
   };
 
+  // Compressed local MP4 only — YouTube embeds letterbox poorly as hero backgrounds
   const heroVideoUrl =
-    home?.heroVideoFileUrl ??
-    home?.heroVideoUrl ??
-    settings?.defaultHero?.backgroundVideoUrl ??
-    siteContent.heroVideoUrl ??
-    localMedia.heroVideo ??
-    null;
+    siteContent.heroVideoUrl ?? localMedia.heroVideo ?? null;
 
   return {
     name: settings?.siteTitle ?? siteContent.name,

@@ -42,7 +42,7 @@ function CountdownUnit({
       >
         {ready ? String(value).padStart(2, "0") : "--"}
       </span>
-      <span className="mt-0.5 text-[8px] font-medium uppercase tracking-[0.12em] text-muted-foreground sm:mt-1.5 sm:text-[10px] sm:tracking-[0.18em]">
+      <span className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground sm:mt-1.5 sm:text-[10px] sm:tracking-[0.18em]">
         {label}
       </span>
     </div>

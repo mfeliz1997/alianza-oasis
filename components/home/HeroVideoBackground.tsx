@@ -1,35 +1,61 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { localMedia } from "@/lib/local-media";
 
 type HeroVideoBackgroundProps = {
-  src: string;
+  /** Local compressed MP4 (~1.4 MB). YouTube embeds look poor as backgrounds. */
+  src?: string | null;
   poster?: string;
 };
 
-function resolveHeroSrc(src: string | undefined): string {
-  if (!src?.trim() || src.startsWith("http")) return localMedia.heroVideo;
-  return src;
+function shouldPlayVideo(): boolean {
+  if (typeof window === "undefined") return false;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return false;
+  }
+  const connection = (
+    navigator as Navigator & {
+      connection?: { saveData?: boolean; effectiveType?: string };
+    }
+  ).connection;
+  if (connection?.saveData) return false;
+  if (connection?.effectiveType === "2g" || connection?.effectiveType === "slow-2g") {
+    return false;
+  }
+  // Mobile + tablet portrait: poster only — biggest bandwidth win
+  if (window.matchMedia("(max-width: 1023px)").matches) return false;
+  return true;
 }
 
-/** Video de fondo del hero — visible bajo overlay suave. */
+/** Hero background: poster everywhere; compressed MP4 only on desktop. */
 export function HeroVideoBackground({
   src,
-  poster = localMedia.community[0],
+  poster = localMedia.heroPoster,
 }: HeroVideoBackgroundProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const resolvedSrc = resolveHeroSrc(src);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const localSrc =
+    src && !src.startsWith("http") ? src : localMedia.heroVideo;
+
   const [ready, setReady] = useState(false);
+  const [playVideo, setPlayVideo] = useState(false);
 
   useEffect(() => {
+    setPlayVideo(shouldPlayVideo());
+  }, []);
+
+  useEffect(() => {
+    if (!playVideo || !localSrc) return;
     const video = videoRef.current;
-    if (!video) return;
+    const root = containerRef.current;
+    if (!video || !root) return;
 
     const tryPlay = () => {
       void video.play().catch(() => {
-        /* autoplay blocked until interaction */
+        /* autoplay blocked */
       });
     };
 
@@ -40,35 +66,69 @@ export function HeroVideoBackground({
 
     video.addEventListener("loadeddata", onReady);
     video.addEventListener("canplay", onReady);
+
+    // Only fetch when hero is on screen
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (video.networkState === HTMLMediaElement.NETWORK_EMPTY) {
+            video.load();
+          }
+          tryPlay();
+        } else {
+          video.pause();
+        }
+      },
+      { rootMargin: "80px", threshold: 0.05 }
+    );
+    io.observe(root);
+
     if (video.readyState >= 2) onReady();
-    tryPlay();
 
     return () => {
+      io.disconnect();
       video.removeEventListener("loadeddata", onReady);
       video.removeEventListener("canplay", onReady);
     };
-  }, [resolvedSrc]);
+  }, [localSrc, playVideo]);
 
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+    <div
+      ref={containerRef}
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+      aria-hidden
+    >
       <motion.div
         className="absolute inset-0"
         initial={{ opacity: 0, scale: 1.06 }}
-        animate={{ opacity: ready ? 1 : 0.4, scale: 1.02 }}
+        animate={{ opacity: ready || !playVideo ? 1 : 0.85, scale: 1.02 }}
         transition={{ duration: 1.2, ease: "easeOut" }}
       >
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          poster={poster}
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src={resolvedSrc} type="video/mp4" />
-        </video>
+        <div className="absolute inset-0">
+          <Image
+            src={poster}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+        </div>
+
+        {playVideo && localSrc && (
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="none"
+            poster={poster}
+            className="absolute inset-0 h-full w-full object-cover"
+          >
+            <source src={localSrc} type="video/mp4" />
+          </video>
+        )}
       </motion.div>
 
       <div className="absolute inset-0 bg-black/55 md:bg-black/50" />

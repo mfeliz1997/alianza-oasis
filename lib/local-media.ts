@@ -1,6 +1,8 @@
 /** Rutas estáticas servidas desde /public (copiadas desde /assets). */
 export const localMedia = {
+  /** ~1.4 MB compressed (was 79 MB 4K). Desktop only — mobile uses poster. */
   heroVideo: "/media/hero.mp4",
+  heroPoster: "/images/hero-poster.jpg",
   services: {
     sundaySpanish: "/images/services/sunday-spanish.jpg",
     sundayEnglish: "/images/services/sunday-english.jpg",

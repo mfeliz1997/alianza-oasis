@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { MinistrySection } from "@/components/ministries/MinistrySection";
 import { getServerLocale } from "@/lib/i18n/get-locale";
 import { getMessages } from "@/lib/i18n/messages";
@@ -7,9 +6,10 @@ import {
   ministriesIntro,
 } from "@/lib/ministries-content";
 
-export const metadata: Metadata = {
-  title: "Ministerios",
-};
+export async function generateMetadata() {
+  const locale = await getServerLocale();
+  return { title: locale === "en" ? "Ministries" : "Ministerios" };
+}
 
 export default async function OurMinistriesPage() {
   const locale = await getServerLocale();
@@ -19,7 +19,7 @@ export default async function OurMinistriesPage() {
   return (
     <div>
       <header className="border-b border-border bg-brand-warm">
-        <div className="mx-auto max-w-6xl px-6 py-20 md:px-10 md:py-24">
+        <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20 md:px-10 md:py-24">
           <p className="text-xs font-medium uppercase tracking-[0.25em] text-brand-teal">
             {t.ministriesPage.eyebrow}
           </p>

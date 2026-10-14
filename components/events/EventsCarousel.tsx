@@ -14,9 +14,9 @@ export async function EventsCarousel() {
   const dateLocale = locale === "en" ? enUS : es;
 
   return (
-    <section className="border-t border-border bg-white py-20 md:py-24">
-      <div className="mx-auto max-w-5xl px-6 md:px-8">
-        <div className="mb-10 flex items-end justify-between gap-4">
+    <section className="border-t border-border bg-white py-14 sm:py-20 md:py-24">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 md:px-8">
+        <div className="mb-8 flex items-end justify-between gap-4 sm:mb-10">
           <div>
             <p className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">
               {t.events.eyebrow}

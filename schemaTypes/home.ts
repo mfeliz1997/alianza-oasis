@@ -37,18 +37,28 @@ export const homeType: SchemaTypeDefinition = defineType({
       ],
     }),
     defineField({
-      name: "heroVideoUrl",
-      title: "Video de fondo — URL (MP4)",
+      name: "heroYoutubeUrl",
+      title: "Video de fondo — YouTube (recomendado)",
       type: "url",
       group: "hero",
-      description: "Video de adoración/iglesia. Se ve translúcido detrás del hero.",
+      description:
+        "Pega el link de YouTube (o déjalo en Sanity). Así el video no consume Fast Data Transfer en Vercel. En móvil se muestra solo la imagen.",
+    }),
+    defineField({
+      name: "heroVideoUrl",
+      title: "Video de fondo — URL (MP4) — fallback",
+      type: "url",
+      group: "hero",
+      description:
+        "Solo si no hay YouTube. Prefiere YouTube para no gastar bandwidth.",
     }),
     defineField({
       name: "heroVideo",
-      title: "Video de fondo — archivo",
+      title: "Video de fondo — archivo MP4 — fallback",
       type: "file",
       group: "hero",
       options: { accept: "video/*" },
+      description: "Evitar archivos grandes. Preferir YouTube.",
     }),
     defineField({
       name: "welcomeEyebrow",

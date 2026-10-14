@@ -16,7 +16,7 @@ export type SiteHeaderProps = {
 };
 
 function LanguageToggle() {
-  const { locale, setLocale } = useLocale();
+  const { locale, setLocale, messages } = useLocale();
 
   const options: { id: Locale; label: string }[] = [
     { id: "es", label: "ES" },
@@ -27,7 +27,7 @@ function LanguageToggle() {
     <div
       className="flex rounded-full border border-border p-0.5 text-[11px] font-semibold"
       role="group"
-      aria-label="Language"
+      aria-label={messages.nav.language}
     >
       {options.map((opt) => (
         <button
@@ -69,10 +69,10 @@ export function SiteHeader({
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-white/95 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-border bg-white/95 backdrop-blur-md supports-[backdrop-filter]:bg-white/90">
       <div className="accent-bar h-0.5 w-full" />
-      <div className="mx-auto flex h-[4.25rem] max-w-5xl items-center justify-between gap-4 px-6 md:px-8">
-        <Link href="/" className="shrink-0">
+      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-3 px-4 sm:h-[4.25rem] sm:gap-4 sm:px-6 md:px-8">
+        <Link href="/" className="shrink-0" onClick={() => setOpen(false)}>
           <ChurchLogo
             alt={logoAlt}
             src={logoUrl}
@@ -93,7 +93,7 @@ export function SiteHeader({
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <LanguageToggle />
           {showLiveButton && (
             <a
@@ -111,9 +111,10 @@ export function SiteHeader({
           )}
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border lg:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border lg:hidden"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
+            aria-controls="mobile-nav"
             aria-label={open ? t.closeMenu : t.openMenu}
           >
             {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
@@ -122,18 +123,19 @@ export function SiteHeader({
       </div>
 
       <div
+        id="mobile-nav"
         className={cn(
           "border-t border-border bg-white lg:hidden",
           open ? "block" : "hidden"
         )}
       >
-        <nav className="mx-auto flex max-w-5xl flex-col px-6 py-4">
+        <nav className="mx-auto flex max-w-5xl flex-col px-4 py-2 sm:px-6 sm:py-4">
           {nav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
-              className="border-b border-border/60 py-3.5 text-sm font-medium last:border-0"
+              className="border-b border-border/60 py-3.5 text-[15px] font-medium last:border-0 active:bg-muted/60"
             >
               {item.label}
             </Link>
@@ -143,7 +145,7 @@ export function SiteHeader({
               href={youtubeUrl}
               target="_blank"
               rel="noreferrer"
-              className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-brand-teal"
+              className="mt-2 inline-flex items-center gap-2 py-3 text-[15px] font-medium text-brand-teal"
               onClick={() => setOpen(false)}
             >
               {t.live}

@@ -13,6 +13,54 @@ export type YouTubeLiveStatus = {
   actualStartTime?: string;
 };
 
+/** Extract an 11-char YouTube video id from a URL or bare id. */
+export function extractYouTubeVideoId(
+  value: string | null | undefined
+): string | null {
+  if (!value?.trim()) return null;
+  const raw = value.trim();
+  if (/^[\w-]{11}$/.test(raw)) return raw;
+
+  try {
+    const url = new URL(raw);
+    const host = url.hostname.replace(/^www\./, "");
+    if (host === "youtu.be") {
+      const id = url.pathname.split("/").filter(Boolean)[0];
+      return id && /^[\w-]{11}$/.test(id) ? id : null;
+    }
+    if (host === "youtube.com" || host === "m.youtube.com" || host === "youtube-nocookie.com") {
+      const v = url.searchParams.get("v");
+      if (v && /^[\w-]{11}$/.test(v)) return v;
+      const parts = url.pathname.split("/").filter(Boolean);
+      const embedIdx = parts.findIndex((p) => p === "embed" || p === "shorts" || p === "live");
+      if (embedIdx >= 0 && parts[embedIdx + 1] && /^[\w-]{11}$/.test(parts[embedIdx + 1])) {
+        return parts[embedIdx + 1];
+      }
+    }
+  } catch {
+    /* not a URL */
+  }
+  return null;
+}
+
+/** Background embed URL — muted, looping, no chrome. */
+export function youtubeBackgroundEmbedUrl(videoId: string): string {
+  const params = new URLSearchParams({
+    autoplay: "1",
+    mute: "1",
+    controls: "0",
+    playsinline: "1",
+    loop: "1",
+    playlist: videoId,
+    rel: "0",
+    modestbranding: "1",
+    iv_load_policy: "3",
+    disablekb: "1",
+    fs: "0",
+  });
+  return `https://www.youtube-nocookie.com/embed/${videoId}?${params.toString()}`;
+}
+
 let cachedChannelId: string | null = null;
 
 export async function resolveYouTubeChannelId(
